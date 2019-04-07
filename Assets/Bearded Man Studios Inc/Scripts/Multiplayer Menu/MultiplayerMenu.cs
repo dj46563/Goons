@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class MultiplayerMenu : MonoBehaviour
 {
+    public InputField displayName = null;
 	public InputField ipAddress = null;
 	public InputField portNumber = null;
 	public bool DontChangeSceneOnConnect = false;
@@ -154,7 +155,7 @@ public class MultiplayerMenu : MonoBehaviour
 		{
 			Debug.Log("Player " + player.NetworkId + " timed out");
 		};
-		//LobbyService.Instance.Initialize(server);
+		LobbyService.Instance.Initialize(server);
 
 		Connected(server);
 	}
@@ -207,6 +208,9 @@ public class MultiplayerMenu : MonoBehaviour
 
 			masterServerData = mgr.MasterServerRegisterData(networker, serverId, serverName, type, mode, comment, useElo, eloRequired);
 		}
+
+        // Grab their name from the display name input field
+	    PlayerPrefs.SetString("Name", displayName.text);
 
 		mgr.Initialize(networker, masterServerHost, masterServerPort, masterServerData);
 
