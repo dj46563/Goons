@@ -281,6 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MyCamera: {fileID: 1627161347117242}
+  Nametag: {fileID: 102329738343347564}
 --- !u!124 &124133246322704924
 Behaviour:
   m_ObjectHideFlags: 1

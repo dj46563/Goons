@@ -209,8 +209,10 @@ public class MultiplayerMenu : MonoBehaviour
 			masterServerData = mgr.MasterServerRegisterData(networker, serverId, serverName, type, mode, comment, useElo, eloRequired);
 		}
 
-        // Grab their name from the display name input field
-	    PlayerPrefs.SetString("Name", displayName.text);
+        // Grab their name from the display name input field, if input field is empty use the
+        // name "Goon"
+	    string name = displayName.text == "" ? "Goon" : displayName.text;
+        PlayerPrefs.SetString("Name", name);
 
 		mgr.Initialize(networker, masterServerHost, masterServerPort, masterServerData);
 

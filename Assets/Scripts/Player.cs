@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using BeardedManStudios.Forge.Networking;
 using UnityEngine;
+using UnityEngine.UI;
 
 using BeardedManStudios.Forge.Networking.Generated;
 
@@ -17,6 +19,7 @@ public class Player : PlayerBehavior
     {
         get { return networkObject.IsOwner; }
     }
+    public TextMesh Nametag;
 
     protected override void NetworkStart()
     {
@@ -26,7 +29,11 @@ public class Player : PlayerBehavior
         {
             Cursor.lockState = CursorLockMode.Locked;
             MyCamera.gameObject.SetActive(true);
+            Name = PlayerPrefs.GetString("Name");
+            networkObject.SendRpc(RPC_SET_NAME, Receivers.OthersBuffered, Name);
         }
+
+        Nametag.text = Name;
     }
 
     // Update is called once per frame
@@ -70,5 +77,11 @@ public class Player : PlayerBehavior
 
         MyCamera.transform.Rotate(Vector3.left * mouseY);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    public override void SetName(RpcArgs args)
+    {
+        Name = args.GetNext<string>();
+        Nametag.text = Name;
     }
 }
