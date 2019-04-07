@@ -41,6 +41,8 @@ public class Player : PlayerBehavior
         Nametag.text = Name;
         rigidbodyRef = GetComponent<Rigidbody>();
         colliderRef = GetComponent<Collider>();
+
+        rigidbodyRef.velocity = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -87,7 +89,13 @@ public class Player : PlayerBehavior
                     }
                 }
             }
+        }
+    }
 
+    private void Update()
+    {
+        if (networkObject.IsOwner)
+        {
             networkObject.position = transform.position;
             networkObject.rotation = transform.rotation;
         }
