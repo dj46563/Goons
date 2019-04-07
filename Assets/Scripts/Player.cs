@@ -9,11 +9,16 @@ using BeardedManStudios.Forge.Networking.Generated;
 public class Player : PlayerBehavior
 {
 
-    private float speed = 5f;
+    private float speed = 50f;
     private float mouseSensitivity = 150f;
     private float xAxisClamp;
+    private float useRange = 30f;
+
+    private Rigidbody rigidbodyRef;
+    private Collider colliderRef;
 
     public string Name { get; private set; }
+    
     public GameObject MyCamera;
     public bool IsOwner
     {
@@ -34,19 +39,54 @@ public class Player : PlayerBehavior
         }
 
         Nametag.text = Name;
+        rigidbodyRef = GetComponent<Rigidbody>();
+        colliderRef = GetComponent<Collider>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (networkObject.IsOwner)
         {
-            Vector3 translation = new Vector3();
+            Vector3 translation = Vector3.zero;
+
             translation += transform.forward * Input.GetAxisRaw("Vertical");
             translation += transform.right * Input.GetAxisRaw("Horizontal");
-            transform.position += translation * speed * Time.deltaTime;
+            translation = translation.normalized;
 
+            // Bit layer mask to ignore Player colliders on layer 8
+            int layerMask = 1 << 8; // mask to only collide with player
+            layerMask = ~layerMask; // inverse the mask
+            // Use a capsule to see if I am on the ground
+            if (!Physics.CheckCapsule(colliderRef.bounds.center, new Vector3(colliderRef.bounds.center.x,
+                colliderRef.bounds.min.y - 0.1f, colliderRef.bounds.center.z), 0.18f, layerMask))
+            {
+                translation += Vector3.down * 2;
+                Debug.Log("Not grounded");
+            }
+            
+            rigidbodyRef.MovePosition(transform.position + translation * speed * Time.deltaTime);
+            //rigidbodyRef.velocity = translation * speed;
+
+            // Camera movement with mouse
             CameraRotation();
+
+            // Use key
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(MyCamera.transform.position, MyCamera.transform.forward,
+                    out hit, useRange))
+                {
+                    ColorShift colorShift = hit.collider.gameObject.GetComponent<ColorShift>();
+                    if (colorShift != null)
+                    {
+                        Color color = colorShift.Color;
+                        GetComponent<Renderer>().material.color = color;
+                        networkObject.SendRpc(RPC_SET_COLOR, Receivers.OthersBuffered, color);
+                    }
+                }
+            }
 
             networkObject.position = transform.position;
             networkObject.rotation = transform.rotation;
@@ -76,12 +116,19 @@ public class Player : PlayerBehavior
         }
 
         MyCamera.transform.Rotate(Vector3.left * mouseY);
-        transform.Rotate(Vector3.up * mouseX);
+        //transform.Rotate(Vector3.up * mouseX);
+        Quaternion deltaRotation = Quaternion.Euler(Vector3.up * mouseX);
+        rigidbodyRef.MoveRotation(rigidbodyRef.rotation * deltaRotation);
     }
 
     public override void SetName(RpcArgs args)
     {
         Name = args.GetNext<string>();
         Nametag.text = Name;
+    }
+
+    public override void SetColor(RpcArgs args)
+    {
+        GetComponent<Renderer>().material.color = args.GetNext<Color>();
     }
 }

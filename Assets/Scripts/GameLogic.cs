@@ -9,7 +9,7 @@ public class GameLogic : GameLogicBehavior {
 	// Use this for initialization
 	void Start ()
 	{
-	    NetworkManager.Instance.InstantiatePlayer(position: new Vector3(0, 5, 0));
+	    NetworkManager.Instance.InstantiatePlayer(position: new Vector3(0, 50, 0));
 	}
 	
 	// Update is called once per frame
