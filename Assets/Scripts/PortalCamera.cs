@@ -20,15 +20,19 @@ public class PortalCamera : MonoBehaviour
         Player = GameLogicRef.PlayerCamera.transform;
         if (Player != null)
         {
+            // Get the offset from player 1 to the entrance portal
             Vector3 playerOffsetFromPortal1 = Player.position - Portal1.position;
-            Vector3 playerOffsetFromPortal2 = Player.position - Portal2.position;
-            Vector3 offsetFromPortal1ToPortal2 = Portal1.position - Portal2.position;
 
-            float angularDifferenceBetweenPortals = Quaternion.Angle(Portal1.rotation, Portal2.rotation);
-            Quaternion portalRotationDifference = Quaternion.AngleAxis(180f - angularDifferenceBetweenPortals, Vector3.up);
+            // Get the difference in rotation from exit to entrance
+            Quaternion portalRotationDifference = Portal2.rotation * Quaternion.Inverse(Portal1.rotation);
+            // Rotate that angle 180 degrees on the up axis because my portals face each other
+            portalRotationDifference = portalRotationDifference * Quaternion.AngleAxis(180f, Vector3.up);
+            // Calculate the new direction of the camera
             Vector3 newCameraDirection = portalRotationDifference * Player.forward;
 
-            transform.position = Portal2.position + playerOffsetFromPortal1;
+            // Set the position to my offset from the entrance with the rotational difference applied
+            transform.position = Portal2.position + portalRotationDifference * playerOffsetFromPortal1;
+            // Have the camera look in the direction of the calculated direction
             transform.rotation = Quaternion.LookRotation(newCameraDirection);
         }    
 	}
