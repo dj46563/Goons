@@ -6,10 +6,20 @@ using UnityEngine;
 
 public class GameLogic : GameLogicBehavior {
 
+    public GameObject PlayerCamera { get; private set; }
+    public GameObject PlayerObject { get; private set; }
+
 	// Use this for initialization
 	void Start ()
 	{
-	    NetworkManager.Instance.InstantiatePlayer(position: new Vector3(0, 50, 0));
+	    Player player = NetworkManager.Instance.InstantiatePlayer(position: new Vector3(0, 5, 0)) as Player;
+
+        // Set the public properties for other objects to use
+        PlayerObject = player.gameObject;
+	    PlayerCamera = player.MyCamera;
+
+        // Portal stuff
+        GetComponent<PortalTextureSetup>().SetupPortalMaterial();
 	}
 	
 	// Update is called once per frame
