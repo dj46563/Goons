@@ -14,7 +14,7 @@ public class Player : PlayerBehavior
     private float xAxisClamp;
     private float useRange = 30f;
 
-    private Rigidbody rigidbodyRef;
+    private CharacterController ccRef;
     private Collider colliderRef;
 
     public string Name { get; private set; }
@@ -26,29 +26,32 @@ public class Player : PlayerBehavior
     }
     public TextMesh Nametag;
 
+    private bool isOwner;
+
     protected override void NetworkStart()
     {
         base.NetworkStart();
 
-        if (networkObject.IsOwner)
+        isOwner = networkObject.IsOwner;
+
+        if (isOwner)
         {
             Cursor.lockState = CursorLockMode.Locked;
             MyCamera.gameObject.SetActive(true);
             Name = PlayerPrefs.GetString("Name");
             networkObject.SendRpc(RPC_SET_NAME, Receivers.OthersBuffered, Name);
+            Destroy(transform.GetComponentInChildren<Nametag>().gameObject); 
         }
 
         Nametag.text = Name;
-        rigidbodyRef = GetComponent<Rigidbody>();
         colliderRef = GetComponent<Collider>();
-
-        rigidbodyRef.velocity = Vector3.zero;
+        ccRef = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if (networkObject.IsOwner)
+        if (isOwner)
         {
             Vector3 translation = Vector3.zero;
 
@@ -66,9 +69,8 @@ public class Player : PlayerBehavior
                 translation += Vector3.down * 2;
                 Debug.Log("Not grounded");
             }
-            
-            rigidbodyRef.MovePosition(transform.position + translation * speed * Time.deltaTime);
-            //rigidbodyRef.velocity = translation * speed;
+
+            ccRef.Move(translation * speed * Time.deltaTime);
 
             // Camera movement with mouse
             CameraRotation();
@@ -78,7 +80,7 @@ public class Player : PlayerBehavior
             {
                 RaycastHit hit;
                 if (Physics.Raycast(MyCamera.transform.position, MyCamera.transform.forward,
-                    out hit, useRange))
+                    out hit, useRange, layerMask))
                 {
                     ColorShift colorShift = hit.collider.gameObject.GetComponent<ColorShift>();
                     if (colorShift != null)
@@ -89,13 +91,7 @@ public class Player : PlayerBehavior
                     }
                 }
             }
-        }
-    }
 
-    private void Update()
-    {
-        if (networkObject.IsOwner)
-        {
             networkObject.position = transform.position;
             networkObject.rotation = transform.rotation;
         }
@@ -124,9 +120,7 @@ public class Player : PlayerBehavior
         }
 
         MyCamera.transform.Rotate(Vector3.left * mouseY);
-        //transform.Rotate(Vector3.up * mouseX);
-        Quaternion deltaRotation = Quaternion.Euler(Vector3.up * mouseX);
-        rigidbodyRef.MoveRotation(rigidbodyRef.rotation * deltaRotation);
+        transform.Rotate(Vector3.up * mouseX);
     }
 
     public override void SetName(RpcArgs args)

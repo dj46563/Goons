@@ -26,25 +26,26 @@ public class PortalTeleportor : MonoBehaviour
             // and to make sure we are entering in the correct direction
 	        Vector3 portalToPlayer = player.position - transform.position;
 	        float dotProduct = Vector3.Dot(transform.up, portalToPlayer);
-	        Debug.Log("Dot: " + dotProduct.ToString());
             // If this is true the player has moved across the portal
             if (dotProduct < 0)
 	        {
                 // Teleport!
-                Debug.Log("Teleport");
 
                 // Calculate the rotation difference and apply it
-	            float rotationDiff = -Quaternion.Angle(transform.rotation, Reciever.rotation);
-                player.Rotate(Vector3.up, 180f - rotationDiff);
+	            // Get the difference in rotation from exit to entrance
+	            Quaternion portalRotationDifference = Reciever.rotation * Quaternion.Inverse(transform.rotation);
+	            // Rotate that angle 180 degrees on the up axis because my portals face each other
+	            portalRotationDifference = portalRotationDifference * Quaternion.AngleAxis(180f, Vector3.up);
+                //player.Rotate(Vector3.up, 180f - rotationDiff);
+	            player.rotation = player.rotation * portalRotationDifference;
 
-	            Vector3 positionOffset = Quaternion.Euler(0f, rotationDiff, 0f) * portalToPlayer;
+	            Vector3 positionOffset = portalRotationDifference * portalToPlayer;
 	            Vector3 sourceToReceiver = Reciever.position - transform.position;
                 player.position = player.position + positionOffset + sourceToReceiver;
 	            //player.position = player.position + sourceToReceiver;
 
                 playerIsOverlapping = false;
-            }
-	        
+            }  
         }
 	}
 
@@ -59,7 +60,6 @@ public class PortalTeleportor : MonoBehaviour
             if (dotProduct > 0)
             {
                 playerIsOverlapping = true;
-                Debug.Log("Trigger enter");
             }
         }
     }
@@ -70,7 +70,6 @@ public class PortalTeleportor : MonoBehaviour
         if (player != null && player.networkObject.IsOwner)
         {
             playerIsOverlapping = false;
-            Debug.Log("Trigger exit");
         }
     }
 }

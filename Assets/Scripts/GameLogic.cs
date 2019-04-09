@@ -12,7 +12,7 @@ public class GameLogic : GameLogicBehavior {
 	// Use this for initialization
 	void Start ()
 	{
-	    Player player = NetworkManager.Instance.InstantiatePlayer(position: new Vector3(0, 5, 0)) as Player;
+	    Player player = NetworkManager.Instance.InstantiatePlayer(position: new Vector3(0, 15, 0)) as Player;
 
         // Set the public properties for other objects to use
         PlayerObject = player.gameObject;

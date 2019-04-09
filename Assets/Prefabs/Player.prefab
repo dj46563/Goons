@@ -61,6 +61,7 @@ GameObject:
   - component: {fileID: 23765637887216052}
   - component: {fileID: 114915898781954202}
   - component: {fileID: 54665990563158404}
+  - component: {fileID: 143766896069661450}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -318,3 +319,20 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1627161347117242}
   m_Enabled: 1
+--- !u!143 &143766896069661450
+CharacterController:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1813091607089942}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
