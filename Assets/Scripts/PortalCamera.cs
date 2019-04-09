@@ -8,16 +8,10 @@ public class PortalCamera : MonoBehaviour
     public Transform Portal2;
     public Transform Player;
     public GameLogic GameLogicRef;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        Player = GameLogicRef.PlayerCamera.transform;
         if (Player != null)
         {
             // Get the offset from player 1 to the entrance portal
@@ -34,6 +28,10 @@ public class PortalCamera : MonoBehaviour
             transform.position = Portal2.position + portalRotationDifference * playerOffsetFromPortal1;
             // Have the camera look in the direction of the calculated direction
             transform.rotation = Quaternion.LookRotation(newCameraDirection);
-        }    
+        }
+        else
+        {
+            Player = GameLogicRef.PlayerCamera.transform;
+        }
 	}
 }

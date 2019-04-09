@@ -9,6 +9,21 @@ public class GameLogic : GameLogicBehavior {
     public GameObject PlayerCamera { get; private set; }
     public GameObject PlayerObject { get; private set; }
 
+    private static GameLogic _instance;
+
+    public static GameLogic Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<GameLogic>();
+            }
+
+            return _instance;
+        }
+    }
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -24,6 +39,5 @@ public class GameLogic : GameLogicBehavior {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 }

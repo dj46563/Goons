@@ -44,8 +44,34 @@ public class Player : PlayerBehavior
         }
 
         Nametag.text = Name;
-        colliderRef = GetComponent<Collider>();
+        
         ccRef = GetComponent<CharacterController>();
+        colliderRef = ccRef.GetComponent<Collider>();
+    }
+
+    public void CalculateMovement()
+    {
+        Vector3 translation = Vector3.zero;
+
+        translation += transform.forward * Input.GetAxisRaw("Vertical");
+        translation += transform.right * Input.GetAxisRaw("Horizontal");
+        translation = translation.normalized;
+
+        // Bit layer mask to ignore Player colliders on layer 8
+        int layerMask = 1 << 8; // mask to only collide with player
+        layerMask = ~layerMask; // inverse the mask
+        // Use a capsule to see if I am on the ground
+        if (!Physics.CheckCapsule(colliderRef.bounds.center, new Vector3(colliderRef.bounds.center.x,
+            colliderRef.bounds.min.y - 0.1f, colliderRef.bounds.center.z), 0.18f, layerMask))
+        {
+            translation += Vector3.down * 2;
+            Debug.Log("Not grounded");
+        }
+
+        ccRef.Move(translation * speed * Time.deltaTime);
+
+        // Camera movement with mouse
+        CameraRotation();
     }
 
     // Update is called once per frame
@@ -53,29 +79,12 @@ public class Player : PlayerBehavior
     {
         if (isOwner)
         {
-            Vector3 translation = Vector3.zero;
+            CalculateMovement();
 
-            translation += transform.forward * Input.GetAxisRaw("Vertical");
-            translation += transform.right * Input.GetAxisRaw("Horizontal");
-            translation = translation.normalized;
-
+            // Use key
             // Bit layer mask to ignore Player colliders on layer 8
             int layerMask = 1 << 8; // mask to only collide with player
             layerMask = ~layerMask; // inverse the mask
-            // Use a capsule to see if I am on the ground
-            if (!Physics.CheckCapsule(colliderRef.bounds.center, new Vector3(colliderRef.bounds.center.x,
-                colliderRef.bounds.min.y - 0.1f, colliderRef.bounds.center.z), 0.18f, layerMask))
-            {
-                translation += Vector3.down * 2;
-                Debug.Log("Not grounded");
-            }
-
-            ccRef.Move(translation * speed * Time.deltaTime);
-
-            // Camera movement with mouse
-            CameraRotation();
-
-            // Use key
             if (Input.GetKeyDown(KeyCode.E))
             {
                 RaycastHit hit;
@@ -132,5 +141,12 @@ public class Player : PlayerBehavior
     public override void SetColor(RpcArgs args)
     {
         GetComponent<Renderer>().material.color = args.GetNext<Color>();
+    }
+
+    public override void Teleport(RpcArgs args)
+    {
+        Vector3 position = args.GetNext<Vector3>();
+        networkObject.positionInterpolation.current = position;
+        networkObject.positionInterpolation.target = position;
     }
 }

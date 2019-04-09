@@ -4,12 +4,13 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"string\"][\"Color\"]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"name\"][\"color\"]]")]
+	[GeneratedRPC("{\"types\":[[\"string\"][\"Color\"][\"Vector3\"]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[\"name\"][\"color\"][\"position\"]]")]
 	public abstract partial class PlayerBehavior : NetworkBehavior
 	{
 		public const byte RPC_SET_NAME = 0 + 5;
 		public const byte RPC_SET_COLOR = 1 + 5;
+		public const byte RPC_TELEPORT = 2 + 5;
 		
 		public PlayerNetworkObject networkObject = null;
 
@@ -25,6 +26,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			base.SetupHelperRpcs(networkObject);
 			networkObject.RegisterRpc("SetName", SetName, typeof(string));
 			networkObject.RegisterRpc("SetColor", SetColor, typeof(Color));
+			networkObject.RegisterRpc("Teleport", Teleport, typeof(Vector3));
 
 			networkObject.onDestroy += DestroyGameObject;
 
@@ -111,6 +113,11 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		/// Color color
 		/// </summary>
 		public abstract void SetColor(RpcArgs args);
+		/// <summary>
+		/// Arguments:
+		/// Vector3 position
+		/// </summary>
+		public abstract void Teleport(RpcArgs args);
 
 		// DO NOT TOUCH, THIS GETS GENERATED PLEASE EXTEND THIS CLASS IF YOU WISH TO HAVE CUSTOM CODE ADDITIONS
 	}
