@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking.Unity;
 using UnityEngine;
@@ -35,9 +36,29 @@ public class GameLogic : GameLogicBehavior {
 
         // Portal stuff
         GetComponent<PortalTextureSetup>().SetupPortalMaterial();
+
+	    NetworkManager.Instance.Networker.playerDisconnected += PlayerDisconnected;
 	}
+
+    private void PlayerDisconnected(NetworkingPlayer networkingPlayer, NetWorker sender)
+    {
+        MainThreadManager.Run(() =>
+        {
+            // Destroy all players owned by the disonnected player
+            foreach (var player in FindObjectsOfType<Player>())
+            {
+                if (player.networkObject.Owner == networkingPlayer)
+                {
+                    player.networkObject.Destroy();
+                    return;
+                }
+            }
+        }); 
+    }
 	
 	// Update is called once per frame
-	void Update () {
-	}
+	void FixedUpdate () {
+	    // Portal stuff
+        GetComponent<PortalTextureSetup>().SetupPortalMaterial();
+    }
 }
