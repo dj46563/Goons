@@ -42,9 +42,8 @@ public class ConnectFour : ConnectFourBehavior
 	        {
                 // Then tell everyone to spawn a piece
 	            bool player1Turn = turn == 1 ? true : false; // convert int turn to a bool
-	            turn = turn == 1 ? 2 : 1; // switch the turns :)
-	            int position = turn == 1 ? pair.Value : 7 - pair.Value; // reverse controls for player 2
-                networkObject.SendRpc(RPC_PLACE_PIECE, Receivers.AllBuffered, player1Turn, pair.Value);
+	            int position = turn == 1 ? pair.Value : 8 - pair.Value; // reverse controls for player 2
+                networkObject.SendRpc(RPC_PLACE_PIECE, Receivers.AllBuffered, player1Turn, position);
 	        }
 	    }
 	}
@@ -82,6 +81,7 @@ public class ConnectFour : ConnectFourBehavior
     {
         bool player1Turn = args.GetNext<bool>();
         int position = args.GetNext<int>();
+        turn = turn == 1 ? 2 : 1; // switch the turns :)
         GameObject objectToCreate = player1Turn ? Player1Piece : Player2Piece;
         Instantiate(objectToCreate, GetSpawn(position), false);
     }

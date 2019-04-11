@@ -10,9 +10,12 @@ public class Player : PlayerBehavior
 {
 
     private float speed = 50f;
-    private float mouseSensitivity = 150f;
+    private float mouseSensitivity = 1f;
     private float xAxisClamp;
     private float useRange = 30f;
+    private float smoothing = 2.0f;
+    private Vector2 smoothV;
+    private Vector2 mouseLook;
 
     private CharacterController ccRef;
     private Collider colliderRef;
@@ -111,25 +114,37 @@ public class Player : PlayerBehavior
         }
     }
 
+    // Rotate the player and camera based on mouse movement
     private void CameraRotation()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        // Get the change in mouse position on the x and y
+        Vector2 mouseDirection = new Vector2(Input.GetAxis("Mouse X") * mouseSensitivity, Input.GetAxis("Mouse Y") * mouseSensitivity);
+        // Multiply smoothing and mouse sensitivity
+        mouseDirection = Vector2.Scale(mouseDirection, new Vector2(mouseSensitivity * smoothing, mouseSensitivity * smoothing));
+        // Smoothly interpolate towards these values
+        smoothV.x = Mathf.Lerp(smoothV.x, mouseDirection.x, 1f / smoothing);
+        smoothV.y = Mathf.Lerp(smoothV.y, mouseDirection.y, 1f / smoothing);
 
-        xAxisClamp += mouseY;
-        if (xAxisClamp > 90f)
-        {
-            xAxisClamp = 90f;
-            mouseY = 0;
-        }
-        else if (xAxisClamp < -90f)
-        {
-            xAxisClamp = -90f;
-            mouseY = 0;
-        }
+        // Apply these changes to our rotation
+        MyCamera.transform.localRotation *= Quaternion.AngleAxis(-smoothV.y, Vector3.right);
+        transform.localRotation *= Quaternion.AngleAxis(smoothV.x, transform.up);
+        // Clamp the camera rotation
+        MyCamera.transform.localRotation = ClampRotationAroundXAxis(MyCamera.transform.localRotation);
+    }
 
-        MyCamera.transform.Rotate(Vector3.left * mouseY);
-        transform.Rotate(Vector3.up * mouseX);
+    // Function stolen from Unity's MouseLook.cs
+    Quaternion ClampRotationAroundXAxis(Quaternion q)
+    {
+        q.x /= q.w;
+        q.y /= q.w;
+        q.z /= q.w;
+        q.w = 1.0f;
+
+        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
+        angleX = Mathf.Clamp(angleX, -90f, 90f);
+        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
+
+        return q;
     }
 
     public override void SetName(RpcArgs args)

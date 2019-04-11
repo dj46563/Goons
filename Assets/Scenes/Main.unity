@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: cd9016ba9cd774b4093e915f118f74bc, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 657503307}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.07997628, g: 0.100469925, b: 0.13876322, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -174,6 +174,10 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 1217114864336492, guid: 4e6521d4b7b36fa418c3ba4beb5d07e6, type: 2}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4e6521d4b7b36fa418c3ba4beb5d07e6, type: 2}
   m_IsPrefabParent: 0
@@ -293,7 +297,6 @@ GameObject:
   - component: {fileID: 411734380}
   - component: {fileID: 411734379}
   - component: {fileID: 411734378}
-  - component: {fileID: 411734376}
   - component: {fileID: 411734375}
   m_Layer: 8
   m_Name: Portal Camera A
@@ -317,19 +320,6 @@ MonoBehaviour:
   Portal2: {fileID: 1213459485}
   Player: {fileID: 0}
   GameLogicRef: {fileID: 500733184}
---- !u!114 &411734376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114658175360799338, guid: 6230928550556af4fa48206a06a996c4,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 411734374}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profile: {fileID: 11400000, guid: 26b54b9ff3009b54697f016b40636fcd, type: 2}
 --- !u!124 &411734378
 Behaviour:
   m_ObjectHideFlags: 0
@@ -363,7 +353,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294966783
   m_RenderingPath: 3
   m_TargetTexture: {fileID: 8400000, guid: 8f491b56aa075e74c80f62bde71a77be, type: 2}
   m_TargetDisplay: 0
@@ -1196,6 +1186,10 @@ Prefab:
       propertyPath: m_DynamicOccludee
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1217114864336492, guid: 4e6521d4b7b36fa418c3ba4beb5d07e6, type: 2}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4e6521d4b7b36fa418c3ba4beb5d07e6, type: 2}
   m_IsPrefabParent: 0
@@ -1480,7 +1474,6 @@ GameObject:
   - component: {fileID: 1670334553}
   - component: {fileID: 1670334552}
   - component: {fileID: 1670334551}
-  - component: {fileID: 1670334550}
   - component: {fileID: 1670334549}
   m_Layer: 8
   m_Name: Portal Camera B
@@ -1504,19 +1497,6 @@ MonoBehaviour:
   Portal2: {fileID: 1256405734}
   Player: {fileID: 0}
   GameLogicRef: {fileID: 500733184}
---- !u!114 &1670334550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114658175360799338, guid: 6230928550556af4fa48206a06a996c4,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1670334548}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profile: {fileID: 11400000, guid: 26b54b9ff3009b54697f016b40636fcd, type: 2}
 --- !u!124 &1670334551
 Behaviour:
   m_ObjectHideFlags: 0
@@ -1550,7 +1530,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294966783
   m_RenderingPath: 3
   m_TargetTexture: {fileID: 8400000, guid: 8f491b56aa075e74c80f62bde71a77be, type: 2}
   m_TargetDisplay: 0
