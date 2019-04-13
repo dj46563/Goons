@@ -4,12 +4,13 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"bool\", \"int\"][]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"player1Piece\", \"position\"][]]")]
+	[GeneratedRPC("{\"types\":[[\"bool\", \"int\"][][\"int\", \"int\"]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[\"player1Piece\", \"position\"][][\"inputKey\", \"playerNumber\"]]")]
 	public abstract partial class ConnectFourBehavior : NetworkBehavior
 	{
 		public const byte RPC_PLACE_PIECE = 0 + 5;
 		public const byte RPC_RESET_PIECES = 1 + 5;
+		public const byte RPC_SEND_INPUT = 2 + 5;
 		
 		public ConnectFourNetworkObject networkObject = null;
 
@@ -25,6 +26,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			base.SetupHelperRpcs(networkObject);
 			networkObject.RegisterRpc("PlacePiece", PlacePiece, typeof(bool), typeof(int));
 			networkObject.RegisterRpc("ResetPieces", ResetPieces);
+			networkObject.RegisterRpc("SendInput", SendInput, typeof(int), typeof(int));
 
 			networkObject.onDestroy += DestroyGameObject;
 
@@ -111,6 +113,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		/// Arguments:
 		/// </summary>
 		public abstract void ResetPieces(RpcArgs args);
+		/// <summary>
+		/// Arguments:
+		/// </summary>
+		public abstract void SendInput(RpcArgs args);
 
 		// DO NOT TOUCH, THIS GETS GENERATED PLEASE EXTEND THIS CLASS IF YOU WISH TO HAVE CUSTOM CODE ADDITIONS
 	}
