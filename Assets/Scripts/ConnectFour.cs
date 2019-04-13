@@ -21,6 +21,9 @@ public class ConnectFour : ConnectFourBehavior
     private int[,] pieceMatrix = new int[7,6];
     private Transform target;
 
+    // SERVER: whether or not it is ready for another piece to be placed
+    private bool ready = true;
+
     private int turn;
     private int inTrigger; // 0 if they are not in either, 1 for player 1, 2 for player 2
 
@@ -128,6 +131,8 @@ public class ConnectFour : ConnectFourBehavior
             StartCoroutine(Spin());
             StartCoroutine(FadePieces());
             Array.Clear(pieceMatrix, 0, pieceMatrix.Length);
+            // Make it player 1's turn
+            turn = 1;
         }
     }
 
@@ -168,22 +173,34 @@ public class ConnectFour : ConnectFourBehavior
         pieces.Clear();
     }
 
+    IEnumerator WaitForReady(float seconds)
+    {
+        ready = false;
+        yield return new WaitForSeconds(seconds);
+        ready = true;
+    }
+
     public override void SendInput(RpcArgs args)
     {
-        if (networkObject.IsServer)
+        if (networkObject.IsServer && ready)
         {
+            // The server has received a request to make a move
             int code = args.GetNext<int>();
             int trigger = args.GetNext<int>();
             if (code == 0)
             {
                 // Reset
                 networkObject.SendRpc(RPC_RESET_PIECES, Receivers.All);
+                // Start the 2.0s lockout timer
+                StartCoroutine(WaitForReady(2f));
             }
             else if (trigger == turn)
             {
                 // Attemp to place the piece in the piece matrix, if it works then continue
                 if (PlacePieceInMatrix(code, trigger))
                 {
+                    // Start the 0.5s lockout timer
+                    StartCoroutine(WaitForReady(0.5f));
                     int position = trigger == 1 ? code : 8 - code;
                     // Then tell everyone to spawn a piece
                     bool player1Turn = turn == 1 ? true : false; // convert int turn to a bool

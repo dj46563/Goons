@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 64556077}
   - component: {fileID: 64556076}
   - component: {fileID: 64556075}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1834,7 +1834,7 @@ GameObject:
   - component: {fileID: 1732661177}
   - component: {fileID: 1732661180}
   - component: {fileID: 1732661179}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Numbers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
