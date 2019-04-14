@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 657503307}
-  m_IndirectSpecularColor: {r: 0.0006380818, g: 0.0000907042, b: 0.00000098591, a: 1}
+  m_IndirectSpecularColor: {r: 0.078320965, g: 0.098188736, b: 0.13558222, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -841,38 +841,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 0c27005dc2935044b81398106f4a15ca, type: 2}
+    - target: {fileID: 114999134844438250, guid: 1d308425bd581ee418791c9c12b9e5a5,
+        type: 2}
+      propertyPath: Sun
+      value: 
+      objectReference: {fileID: 657503309}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1d308425bd581ee418791c9c12b9e5a5, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &632087989 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1361587937119358, guid: 1d308425bd581ee418791c9c12b9e5a5,
-    type: 2}
-  m_PrefabInternal: {fileID: 632087988}
---- !u!108 &632087990 stripped
-Light:
-  m_PrefabParentObject: {fileID: 108317090433191966, guid: 1d308425bd581ee418791c9c12b9e5a5,
-    type: 2}
-  m_PrefabInternal: {fileID: 632087988}
---- !u!23 &632087991 stripped
-MeshRenderer:
-  m_PrefabParentObject: {fileID: 23930469502139022, guid: 1d308425bd581ee418791c9c12b9e5a5,
-    type: 2}
-  m_PrefabInternal: {fileID: 632087988}
---- !u!114 &632087992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 632087989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c9ad0bb174cec94cacc071c4091635c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Sun: {fileID: 657503309}
-  EmissionRenderer: {fileID: 632087991}
-  Light: {fileID: 632087990}
 --- !u!1 &657503306
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,13 +908,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 657503306}
-  m_LocalRotation: {x: 0.51116955, y: 0.47344095, z: 0.45652002, w: -0.5533073}
+  m_LocalRotation: {x: 0.6924268, y: 0.020855099, z: -0.3496977, w: 0.6307311}
   m_LocalPosition: {x: 0, y: 15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 273.68, y: -63.020004, z: -19.263}
+  m_LocalEulerAnglesHint: {x: 62.63, y: -84.981, z: -116.271}
 --- !u!114 &657503309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -950,9 +926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57b83c3233b9e634194e529f574d4ef7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AnglesPerSecond: 4
-  NightStartAngle: 220
-  NightEndAngle: 360
+  AnglesPerSecond: 0
 --- !u!1 &729910644
 GameObject:
   m_ObjectHideFlags: 0
