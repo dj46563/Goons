@@ -6,4 +6,4 @@
 
 ![portal gif](https://media.giphy.com/media/C0sZOc8vnGI9nHfwv7/giphy.gif)
 ![color gif](https://media.giphy.com/media/JfknDBQ21E7Ke2GPH4/giphy.gif)
-![connect four gif](https://media.giphy.com/media/75pfkZe3BS2djbSUkN/giphy.gif)
+![connect four](https://i.giphy.com/media/75pfkZe3BS2djbSUkN/giphy.webp)
