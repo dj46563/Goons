@@ -10,7 +10,7 @@ public class PortalTextureSetup : MonoBehaviour
     public Material CameraMatB;
 
     // Use this for initialization
-    public void SetupPortalMaterial () {
+    public void Start () {
         // Get rid of existing texture
 	    if (PortalCameraA.targetTexture != null)
 	    {

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using BeardedManStudios.Forge.Networking;
 using UnityEngine;
-using BeardedManStudios.Forge.Networking.Generated;
 
-public class ConnectFour : ConnectFourBehavior
+public class ConnectFour : MonoBehaviour
 {
     public Transform LeftSpawn;
     public GameObject Player1Piece;
@@ -18,7 +16,7 @@ public class ConnectFour : ConnectFourBehavior
     public ICollection<GameObject> pieces;
     // Keeps tracks of existing pieces for win checking and instantiating pieces
     // for joining players. player1 = 1, player2 = 2, none = 0
-    private int[,] pieceMatrix = new int[7,6];
+    private int[,] pieceMatrix = new int[8,6];
     private Transform target;
 
     // SERVER: whether or not it is ready for another piece to be placed
@@ -45,7 +43,7 @@ public class ConnectFour : ConnectFourBehavior
 	    turn = 1;
 	    inTrigger = 0;
         pieces = new List<GameObject>();
-	    target = GameLogic.Instance.PlayerCamera.transform;
+	    target = Camera.main.transform;
 	}
 	
 	// Update is called once per frame
@@ -56,7 +54,8 @@ public class ConnectFour : ConnectFourBehavior
             // If one of those keys are pressed and the player is in the correct zone and turn
 	        if (Input.GetKeyDown(pair.Key) && inTrigger != 0)
 	        {
-                networkObject.SendRpc(RPC_SEND_INPUT, Receivers.Server, pair.Value, inTrigger);
+                SendInput(pair.Value, inTrigger);
+                //networkObject.SendRpc(RPC_SEND_INPUT, Receivers.Server, pair.Value, inTrigger);
 	        }
 	    }
 	}
@@ -107,16 +106,14 @@ public class ConnectFour : ConnectFourBehavior
         return newTransform;
     }
 
-    public override void PlacePiece(RpcArgs args)
+    public void PlacePiece(bool player1Turn, int position)
     {
-        bool player1Turn = args.GetNext<bool>();
-        int position = args.GetNext<int>();
         GameObject objectToCreate = player1Turn ? Player1Piece : Player2Piece;
         GameObject piece = Instantiate(objectToCreate, GetSpawn(position), false);
         pieces.Add(piece);
     }
 
-    public override void ResetPieces(RpcArgs args)
+    public void ResetPieces()
     {
         if (BottomCollider != null)
         {
@@ -180,17 +177,15 @@ public class ConnectFour : ConnectFourBehavior
         ready = true;
     }
 
-    public override void SendInput(RpcArgs args)
+    public void SendInput(int code, int trigger)
     {
-        if (networkObject.IsServer && ready)
+        if (ready)
         {
             // The server has received a request to make a move
-            int code = args.GetNext<int>();
-            int trigger = args.GetNext<int>();
             if (code == 0)
             {
                 // Reset
-                networkObject.SendRpc(RPC_RESET_PIECES, Receivers.All);
+                ResetPieces();
                 // Start the 2.0s lockout timer
                 StartCoroutine(WaitForReady(2f));
             }
@@ -204,7 +199,7 @@ public class ConnectFour : ConnectFourBehavior
                     int position = trigger == 1 ? code : 8 - code;
                     // Then tell everyone to spawn a piece
                     bool player1Turn = turn == 1 ? true : false; // convert int turn to a bool
-                    networkObject.SendRpc(RPC_PLACE_PIECE, Receivers.All, player1Turn, position);
+                    PlacePiece(player1Turn, position);
                     turn = turn == 1 ? 2 : 1; // switch the turns :)
                 }
             } 

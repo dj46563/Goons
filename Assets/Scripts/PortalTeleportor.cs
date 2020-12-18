@@ -1,13 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using BeardedManStudios.Forge.Networking;
-using BeardedManStudios.Forge.Networking.Generated;
 using UnityEngine;
 
 public class PortalTeleportor : MonoBehaviour
 {
     public Transform Reciever;
-    public GameLogic GameLogicRef;
 
     private Player player;
     private bool playerIsOverlapping = false;
@@ -16,7 +13,6 @@ public class PortalTeleportor : MonoBehaviour
 	void Start ()
 	{
 	    player = null;
-	    GameLogicRef = FindObjectOfType<GameLogic>();
 	}
 	
 	// Update is called once per frame
@@ -48,7 +44,7 @@ public class PortalTeleportor : MonoBehaviour
                 Vector3 sourceToReceiver = Reciever.position - transform.position;
 
 	            playerTransform.position = Reciever.transform.position + positionOffset;
-                player.networkObject.SendRpc(PlayerBehavior.RPC_TELEPORT, Receivers.Others, playerTransform.position);
+                //player.networkObject.SendRpc(PlayerBehavior.RPC_TELEPORT, Receivers.Others, playerTransform.position);
 
                 playerIsOverlapping = false;
             }  
@@ -58,7 +54,7 @@ public class PortalTeleportor : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         player = other.GetComponent<Player>();
-        if (player != null && player.networkObject.IsOwner)
+        if (player != null)
         {
             // Only set the overlapping if they entered from the correct side
             Vector3 portalToPlayer = player.transform.position - transform.position;
@@ -73,7 +69,7 @@ public class PortalTeleportor : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         player = other.GetComponent<Player>();
-        if (player != null && player.networkObject.IsOwner)
+        if (player != null)
         {
             playerIsOverlapping = false;
         }

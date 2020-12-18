@@ -7,7 +7,6 @@ public class PortalCamera : MonoBehaviour
     public Transform Portal1;
     public Transform Portal2;
     public Transform Player;
-    public GameLogic GameLogicRef;
 	
 	// Update is called once per frame
 	void Update ()
@@ -31,7 +30,8 @@ public class PortalCamera : MonoBehaviour
         }
         else
         {
-            Player = GameLogicRef.PlayerCamera.transform;
+            //Player = GameLogicRef.PlayerCamera.transform;
+            Player = Camera.main.transform;
         }
 	}
 }

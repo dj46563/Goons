@@ -1,12 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using BeardedManStudios.Forge.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 
-using BeardedManStudios.Forge.Networking.Generated;
-
-public class Player : PlayerBehavior
+public class Player : MonoBehaviour
 {
 
     private float speed = 50f;
@@ -25,24 +22,21 @@ public class Player : PlayerBehavior
     public GameObject MyCamera;
     public bool IsOwner
     {
-        get { return networkObject.IsOwner; }
+        get { return true; }
     }
     public TextMesh Nametag;
 
     private bool isOwner;
 
-    protected override void NetworkStart()
+    void Start()
     {
-        base.NetworkStart();
-
-        isOwner = networkObject.IsOwner;
+        isOwner = true;
 
         if (isOwner)
         {
             Cursor.lockState = CursorLockMode.Locked;
             MyCamera.gameObject.SetActive(true);
             Name = PlayerPrefs.GetString("Name");
-            networkObject.SendRpc(RPC_SET_NAME, Receivers.OthersBuffered, Name);
             Destroy(transform.GetComponentInChildren<Nametag>().gameObject); 
         }
 
@@ -50,6 +44,8 @@ public class Player : PlayerBehavior
         
         ccRef = GetComponent<CharacterController>();
         colliderRef = ccRef.GetComponent<Collider>();
+
+        Cursor.visible = false;
     }
 
     public void CalculateMovement()
@@ -99,18 +95,9 @@ public class Player : PlayerBehavior
                     {
                         Color color = colorShift.Color;
                         GetComponent<Renderer>().material.color = color;
-                        networkObject.SendRpc(RPC_SET_COLOR, Receivers.OthersBuffered, color);
                     }
                 }
             }
-
-            networkObject.position = transform.position;
-            networkObject.rotation = transform.rotation;
-        }
-        else
-        {
-            transform.position = networkObject.position;
-            transform.rotation = networkObject.rotation;
         }
     }
 
@@ -145,23 +132,5 @@ public class Player : PlayerBehavior
         q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
 
         return q;
-    }
-
-    public override void SetName(RpcArgs args)
-    {
-        Name = args.GetNext<string>();
-        Nametag.text = Name;
-    }
-
-    public override void SetColor(RpcArgs args)
-    {
-        GetComponent<Renderer>().material.color = args.GetNext<Color>();
-    }
-
-    public override void Teleport(RpcArgs args)
-    {
-        Vector3 position = args.GetNext<Vector3>();
-        networkObject.positionInterpolation.current = position;
-        networkObject.positionInterpolation.target = position;
     }
 }
